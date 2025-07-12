@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Sistem Data Barang & Kasir Es Podeng Manten </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- TAMPILAN LOGIN -->
+    <div id="login-container">
+        <form id="form-login">
+            <h2>Login Aplikasi Kasir</h2>
+            <p>Silakan masuk untuk melanjutkan</p>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group password-wrapper">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <span class="toggle-password">👁️</span>
+            </div>
+            <button type="submit">Login</button>
+            <div id="login-status"></div>
+        </form>
+    </div>
+
+    <!-- WADAH UTAMA APLIKASI (AWALNYA TERSEMBUNYI) -->
+    <div id="app-container" class="hidden">
+        <header>
+            <h1>Sistem Data Barang & Kasir Es Podeng Manten</h1>
+            <div class="header-info">
+                <span id="info-nama-kasir"></span>
+                <button id="btn-logout">Logout</button>
+            </div>
+        </header>
+        
+        <nav>
+            <button id="nav-manajemen" class="active">Manajemen Barang</button>
+            <button id="nav-transaksi">Kasir Transaksi</button>
+            <button id="nav-laporan">Laporan Penjualan</button>
+            <button id="nav-pengguna" class="hidden">Manajemen Pengguna</button>
+        </nav>
+    
+        <main>
+            <!-- Kontainer untuk notifikasi/pesan status global -->
+            <div id="notifikasi" class="hidden"></div>
+
+            <!-- WADAH UNTUK MENAMPILKAN STRUK SETELAH TRANSAKSI -->
+            <div id="area-struk" class="hidden">
+                <div id="struk-content"></div>
+                <div class="struk-actions">
+                    <button id="btn-cetak-struk">Cetak Struk</button>
+                    <button id="btn-transaksi-baru">Transaksi Baru</button>
+                </div>
+            </div>
+
+            <!-- TAMPILAN 1: MANAJEMEN BARANG -->
+            <section id="menu-manajemen-barang">
+                <h2>Manajemen Barang</h2>
+                <div class="form-container">
+                    <form id="form-barang">
+                        <input type="hidden" id="ID_Barang" name="ID_Barang">
+                        <div class="form-row">
+                            <div class="form-group"><label for="Kode_Barang">Kode Barang</label><input type="text" id="Kode_Barang" name="Kode_Barang" required autocomplete="off"><div id="rekomendasi-kode" class="rekomendasi-container"></div></div>
+                            <div class="form-group"><label for="Nama_Barang">Nama Barang</label><input type="text" id="Nama_Barang" name="Nama_Barang" required></div>
+                            <div class="form-group"><label for="Kategori_Barang">Kategori</label><input type="text" id="Kategori_Barang" name="Kategori_Barang"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label for="Stok_Pcs">Stok (Pcs)</label><input type="number" id="Stok_Pcs" name="Stok_Pcs" min="0" value="0" required></div>
+                            <div class="form-group"><label for="Pcs_Per_Lusin">Pcs / Pak atau Lusin</label><input type="number" id="Pcs_Per_Lusin" name="Pcs_Per_Lusin" min="0" value="0"></div>
+                            <div class="form-group"><label for="Pcs_Per_Karton">Pcs / Karton</label><input type="number" id="Pcs_Per_Karton" name="Pcs_Per_Karton" min="0" value="0"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label for="Harga_Pcs">Harga (Pcs)</label><input type="number" id="Harga_Pcs" name="Harga_Pcs" min="0" value="0" required></div>
+                            <div class="form-group"><label for="Harga_Lusin">Harga (Pak atau Lusin)</label><input type="number" id="Harga_Lusin" name="Harga_Lusin" min="0" value="0"></div>
+                            <div class="form-group"><label for="Harga_Karton">Harga (Karton)</label><input type="number" id="Harga_Karton" name="Harga_Karton" min="0" value="0"></div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="btn-tambah">Tambah Barang</button>
+                            <button type="submit" id="btn-simpan" class="hidden">Simpan Perubahan</button>
+                            <button type="button" id="btn-batal" class="hidden">Batal</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tabel-container"><div id="loading-manajemen" class="loading"></div><table><thead><tr><th>Kode</th><th>Nama Barang</th><th>Kategori</th><th>Stok (Pcs)</th><th>Harga (Pcs)</th><th>Aksi</th></tr></thead><tbody id="tabel-barang-body"></tbody></table></div>
+            </section>
+
+            <!-- TAMPILAN 2: KASIR TRANSAKSI -->
+            <section id="menu-transaksi" class="hidden">
+                <h2>Kasir Transaksi</h2>
+                <div class="kasir-grid">
+                    <div class="kasir-kiri"><h3>Keranjang Belanja</h3><div class="tabel-container"><table><thead><tr><th>Nama Barang</th><th style="width: 100px;">Jumlah</th><th style="width: 120px;">Satuan</th><th>Subtotal</th><th style="width: 50px;">Aksi</th></tr></thead><tbody id="tabel-keranjang-body"></tbody></table></div><div class="total-section"><h4>Total Belanja: <span id="total-belanja">Rp 0</span></h4><div class="form-group"><label for="input-bayar">Jumlah Bayar</label><input type="number" id="input-bayar" placeholder="Masukkan jumlah pembayaran"></div><h4>Kembalian: <span id="kembalian">Rp 0</span></h4><button id="btn-proses-transaksi" disabled>Proses Transaksi</button></div></div>
+                    <div class="kasir-kanan"><h3>Pilih Barang</h3><div class="form-group"><label>1. Cari Barang</label><input type="text" id="input-cari-barang" placeholder="Ketik kode atau nama barang..." autocomplete="off"><div id="loading-cari" class="loading hidden"></div><div id="hasil-pencarian" class="rekomendasi-container"></div></div><form id="form-tambah-keranjang" class="hidden"><h4 id="nama-barang-terpilih"></h4><input type="hidden" id="item-terpilih-data"><div class="form-group"><label>2. Masukkan Jumlah & Satuan</label><div class="input-grup"><input type="number" id="input-jumlah-kasir" value="1" min="1"><select id="select-satuan-kasir"></select></div></div><button type="submit" id="btn-tambah-keranjang">3. Tambah ke Keranjang</button></form></div>
+                </div>
+            </section>
+
+            <!-- TAMPILAN 3: LAPORAN PENJUALAN -->
+            <section id="menu-laporan" class="hidden">
+                <h2>Laporan Penjualan</h2>
+                <div class="tabel-container"><div id="loading-laporan" class="loading"></div><table><thead><tr><th>ID Transaksi</th><th>Waktu</th><th>Kasir</th><th>Detail Barang</th><th>Total Belanja</th></tr></thead><tbody id="tabel-laporan-body"></tbody></table></div>
+            </section>
+
+            <!-- TAMPILAN 4: MANAJEMEN PENGGUNA -->
+            <section id="menu-pengguna" class="hidden">
+                <h2>Manajemen Pengguna</h2>
+                <div class="form-container">
+                    <form id="form-pengguna">
+                        <input type="hidden" id="ID_Pengguna" name="ID_Pengguna">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pengguna-username">Username</label>
+                                <input type="text" id="pengguna-username" name="Username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pengguna-nama">Nama Lengkap</label>
+                                <input type="text" id="pengguna-nama" name="Nama_Lengkap" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group password-wrapper">
+                                <label for="pengguna-password">Password (isi untuk pengguna baru / jika ingin diubah)</label>
+                                <!-- === PERBAIKAN DI SINI === -->
+                                <input type="password" id="pengguna-password" name="Password">
+                                <span class="toggle-password">👁️</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="pengguna-role">Role</label>
+                                <select id="pengguna-role" name="Role" required>
+                                    <option value="kasir">Kasir</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="btn-tambah-pengguna">Tambah Pengguna</button>
+                            <button type="submit" id="btn-simpan-pengguna" class="hidden">Simpan Perubahan</button>
+                            <button type="button" id="btn-batal-pengguna" class="hidden">Batal</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tabel-container">
+                    <div id="loading-pengguna" class="loading"></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Nama Lengkap</th>
+                                <th>Role</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-pengguna-body"></tbody>
+                    </table>
+                </div>
+            </section>
+            
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
