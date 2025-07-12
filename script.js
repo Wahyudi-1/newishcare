@@ -599,14 +599,14 @@ async function prosesTransaksi() {
 }
 
 function tampilkanStruk(dataTransaksi, idTransaksi) {
-    let htmlStruk = `<h3>Toko Es Podeng Manten</h3><p>ID Transaksi: ${idTransaksi}</p><p>Waktu: ${new Date().toLocaleString('id-ID')}</p><p>Kasir: ${dataTransaksi.kasir}</p><hr>`;
+    let htmlStruk = `<h3>Toko Newish Care</h3><p>ID Transaksi: ${idTransaksi}</p><p>Waktu: ${new Date().toLocaleString('id-ID')}</p><p>Kasir: ${dataTransaksi.kasir}</p><hr>`;
     dataTransaksi.keranjang.forEach(item => {
         htmlStruk += `<div>${item.namaBarang}</div><div class="struk-item"><span>${item.jumlah} ${item.satuan} x ${formatRupiah(item.hargaSatuan)}</span><span>${formatRupiah(item.subtotal)}</span></div>`;
     });
     htmlStruk += `<hr><div class="struk-item"><strong>Total</strong><strong>${formatRupiah(dataTransaksi.totalBelanja)}</strong></div>`;
     htmlStruk += `<div class="struk-item"><span>Bayar</span><span>${formatRupiah(dataTransaksi.jumlahBayar)}</span></div>`;
     htmlStruk += `<div class="struk-item"><span>Kembali</span><span>${formatRupiah(dataTransaksi.kembalian)}</span></div>`;
-    htmlStruk += `<hr><p style="text-align:center; margin-top:10px;">Terima Kasih, Semoga Menyegarkan Harimu!</p>`;
+    htmlStruk += `<hr><p style="text-align:center; margin-top:10px;">Terima Kasih, Siap Melangkah Menghadapi Hari.</p>`;
     strukContent.innerHTML = htmlStruk;
     areaStruk.classList.remove('hidden');
 }
