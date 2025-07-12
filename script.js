@@ -3,7 +3,7 @@
 // ====================================================================
 
 // PASTIKAN URL WEB APP ANDA SUDAH BENAR DI SINI
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygJO5l1bJRhRRylf60cJ7TxmlKkmXtxEwl9aa2NvTF4RnKLM0FGESGmtaUCByk0gjB/exec"; 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHY9LVZpGeSolttmDb4jTwy2q8a_EqzsklYgnunPh6K2xrVc63vA_9d_SIoy9bNapi/exec"; 
 
 // --- ELEMEN-ELEMEN HTML ---
 const loginContainer = document.getElementById('login-container');
